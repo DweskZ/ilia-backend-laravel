@@ -1,0 +1,178 @@
+{
+  "info": {
+    "name": "IS-803 Tema 2.2 - Luis Figueroa",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    }
+  ],
+  "item": [
+    {
+      "name": "P1 - JSON valido (201)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201', () => pm.response.to.have.status(201));",
+              "pm.test('estado recibida', () => pm.expect(pm.response.json().data.estado).to.eql('recibida'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"actividad_id\": \"44444444-4444-4444-8444-444444444444\",\n  \"docente_id\": \"22222222-2222-4222-8222-222222222222\",\n  \"pedido\": \"Actua como tutor y explica las fracciones a estudiantes de quinto grado.\",\n  \"intento\": 1,\n  \"enviado_en\": \"2026-11-10T14:30:00-05:00\",\n  \"observacion\": null\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/entregas",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "entregas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "P2 - Falta pedido (422)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('422', () => pm.response.to.have.status(422));",
+              "pm.test('errores.pedido', () => pm.expect(pm.response.json().errores).to.have.property('pedido'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"actividad_id\": \"44444444-4444-4444-8444-444444444444\",\n  \"docente_id\": \"22222222-2222-4222-8222-222222222222\",\n  \"intento\": 2,\n  \"enviado_en\": \"2026-11-10T14:30:00-05:00\",\n  \"observacion\": null\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/entregas",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "entregas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "P3 - Tipo incorrecto (422)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('422', () => pm.response.to.have.status(422));",
+              "pm.test('errores.intento', () => pm.expect(pm.response.json().errores).to.have.property('intento'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"actividad_id\": \"44444444-4444-4444-8444-444444444444\",\n  \"docente_id\": \"22222222-2222-4222-8222-222222222222\",\n  \"pedido\": \"Actua como tutor y explica las fracciones a estudiantes de quinto grado.\",\n  \"intento\": \"dos\",\n  \"enviado_en\": \"10/11/2026\",\n  \"observacion\": null\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/entregas",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "entregas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET entrega (reemplazar ID)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/entregas/REEMPLAZAR_ENTREGA_ID",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "entregas",
+            "REEMPLAZAR_ENTREGA_ID"
+          ]
+        }
+      }
+    }
+  ]
+}
