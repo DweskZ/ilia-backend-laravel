@@ -130,3 +130,17 @@ Capturas que debe tomar el estudiante en Postman (coleccion `postman_collection.
 1. Que campo del contrato fue mas facil de malinterpretar y por que?
 2. Que habria pasado en el cliente movil si la API no hubiera validado el tipo de `intento`?
 3. Que cambiarias del contrato para una segunda version?
+
+## Capturas
+
+Pruebas ejecutadas con curl contra `php artisan serve --port=8080`.
+
+![P1: 201 Created](capturas/P1.png)
+
+![P2: 422, falta pedido](capturas/P2.png)
+
+![P3: 422, tipos incorrectos; no se guarda](capturas/P3.png)
+
+## Diagrama
+
+![Cliente → API → validación → base de datos → respuesta](diagrama.png)
