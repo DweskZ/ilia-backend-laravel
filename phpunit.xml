@@ -34,6 +34,7 @@
         <env name="SESSION_DRIVER" value="array"/>
         <env name="LUISFIGUEROA_REVISION_DELAY_SECONDS" value="0"/>
         <env name="LUISFIGUEROA_REVISIONES_LOG" value="storage/logs/luisfigueroa-revisiones-test.log"/>
+        <env name="LUISFIGUEROA_EVENTOS_LOG" value="storage/logs/luisfigueroa-eventos-test.log"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>

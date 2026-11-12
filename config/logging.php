@@ -66,6 +66,13 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'luisfigueroa_eventos' => [
+            'driver' => 'single',
+            'path' => env('LUISFIGUEROA_EVENTOS_LOG', storage_path('logs/luisfigueroa-eventos.log')),
+            'level' => 'debug',
+            'replace_placeholders' => true,
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

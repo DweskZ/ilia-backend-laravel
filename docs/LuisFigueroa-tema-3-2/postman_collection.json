@@ -1,0 +1,417 @@
+{
+  "info": {
+    "name": "IS-803 Tema 3.2 - Luis Figueroa",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8080"
+    },
+    {
+      "key": "demo_password",
+      "value": "(valor de LUISFIGUEROA_DEMO_PASSWORD en .env.example)"
+    },
+    {
+      "key": "token_admin",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "0 - Login admin (guarda token_admin)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('200', () => pm.response.to.have.status(200));",
+              "pm.collectionVariables.set('token_admin', pm.response.json().access_token);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/auth/token",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "token"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"instructor.demo@ilia.test\",\n  \"password\": \"{{demo_password}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "P1 - entrega.recibida -> revision (202)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('202', () => pm.response.to.have.status(202));",
+              "pm.test('destino', () => pm.expect(pm.response.json().destino).to.eql('ilia.entregas.revision'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/eventos/entregas",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "eventos",
+            "entregas"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"{{$guid}}\",\n  \"tipo\": \"entrega.recibida\",\n  \"prioridad\": \"alta\",\n  \"estado\": \"activo\",\n  \"datos\": {\n    \"entrega_id\": \"66666666-6666-4666-8666-666666666666\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token_admin}}",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "P2 - entrega.calificada -> notificaciones (202)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('202', () => pm.response.to.have.status(202));",
+              "pm.test('destino', () => pm.expect(pm.response.json().destino).to.eql('ilia.entregas.notificaciones'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/eventos/entregas",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "eventos",
+            "entregas"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"{{$guid}}\",\n  \"tipo\": \"entrega.calificada\",\n  \"prioridad\": \"media\",\n  \"estado\": \"activo\",\n  \"datos\": {\n    \"entrega_id\": \"66666666-6666-4666-8666-666666666666\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token_admin}}",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "P3 - entrega.reintento_solicitado -> intentos (202)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('202', () => pm.response.to.have.status(202));",
+              "pm.test('destino', () => pm.expect(pm.response.json().destino).to.eql('ilia.entregas.intentos'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/eventos/entregas",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "eventos",
+            "entregas"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"{{$guid}}\",\n  \"tipo\": \"entrega.reintento_solicitado\",\n  \"prioridad\": \"baja\",\n  \"estado\": \"activo\",\n  \"datos\": {\n    \"entrega_id\": \"66666666-6666-4666-8666-666666666666\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token_admin}}",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "P4 - Tipo desconocido -> no_enrutables (202)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('202', () => pm.response.to.have.status(202));",
+              "pm.test('no_enrutable', () => pm.expect(pm.response.json().decision).to.eql('no_enrutable'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/eventos/entregas",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "eventos",
+            "entregas"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"{{$guid}}\",\n  \"tipo\": \"entrega.tipo_inventado\",\n  \"prioridad\": \"media\",\n  \"estado\": \"activo\",\n  \"datos\": {\n    \"entrega_id\": \"66666666-6666-4666-8666-666666666666\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token_admin}}",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "P5 - Entrega anulada: filtrado (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('200', () => pm.response.to.have.status(200));",
+              "pm.test('filtrado', () => pm.expect(pm.response.json().decision).to.eql('filtrado'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/eventos/entregas",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "eventos",
+            "entregas"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"{{$guid}}\",\n  \"tipo\": \"entrega.recibida\",\n  \"prioridad\": \"alta\",\n  \"estado\": \"anulada\",\n  \"datos\": {\n    \"entrega_id\": \"66666666-6666-4666-8666-666666666666\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token_admin}}",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "P6 - Faltan prioridad y datos (422)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('422', () => pm.response.to.have.status(422));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/eventos/entregas",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "eventos",
+            "entregas"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"{{$guid}}\",\n  \"tipo\": \"entrega.recibida\",\n  \"estado\": \"activo\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token_admin}}",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

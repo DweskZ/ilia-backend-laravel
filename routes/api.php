@@ -5,6 +5,7 @@ use App\Http\Controllers\api\EstadoController;
 use App\Http\Controllers\api\EstudianteController;
 use App\Http\Controllers\api\LuisFigueroa\AuthTokenController;
 use App\Http\Controllers\api\LuisFigueroa\EntregaController;
+use App\Http\Controllers\api\LuisFigueroa\EventoEntregaController;
 use App\Http\Controllers\api\LuisFigueroa\IntegracionEntregaController;
 use App\Http\Controllers\api\LuisFigueroa\RevisionController;
 use Illuminate\Http\Request;
@@ -45,3 +46,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/revisiones/sincronas', [RevisionController::class, 'sincrona']);
     Route::get('/revisiones/{correlation_id}', [RevisionController::class, 'show']);
 });
+
+// IS-803 · Tema 3.2 · Luis Figueroa: Message Filter + Content-Based Router sobre RabbitMQ (solo admin)
+Route::middleware('auth:sanctum')->post('/eventos/entregas', [EventoEntregaController::class, 'store']);
