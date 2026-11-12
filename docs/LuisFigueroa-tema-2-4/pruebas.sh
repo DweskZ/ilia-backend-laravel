@@ -22,16 +22,17 @@ token() { # $1 email → imprime solo el token (no se muestra en pantalla)
 login() { # $1 email → muestra la respuesta con el token enmascarado
   echo "POST /api/auth/token  (email=$1)"
   curl -s -i "${J[@]}" -X POST "$BASE/api/auth/token" -d "{\"email\":\"$1\",\"password\":\"$PASS\"}" \
-    | mask
+    | limpia | mask
   echo; echo
 }
+limpia() { rg -v '^(Date|Host|Connection|X-Powered-By|Access-Control-Allow-Origin|Cache-Control|X-Content-Type-Options):'; }  # oculta cabeceras HTTP repetitivas
 mask() { perl -pe 's/("access_token":")([^"|]*\|)?(.{6})[^"]*/$1$3…(oculto)/'; }
 req() { # $1 token|- $2 método $3 ruta [$4 cuerpo]
   local tk="$1" m="$2" ruta="$3" body="$4" a=()
   [ "$tk" != "-" ] && a=(-H "Authorization: Bearer $tk")
   echo "$m $ruta   [Authorization: $([ "$tk" = "-" ] && echo 'sin token' || echo 'Bearer ****')]"
-  if [ -n "$body" ]; then curl -s -i "${J[@]}" "${a[@]}" -X "$m" "$BASE$ruta" -d "$body"
-  else curl -s -i "${J[@]}" "${a[@]}" -X "$m" "$BASE$ruta"; fi
+  if [ -n "$body" ]; then curl -s -i "${J[@]}" "${a[@]}" -X "$m" "$BASE$ruta" -d "$body" | limpia
+  else curl -s -i "${J[@]}" "${a[@]}" -X "$m" "$BASE$ruta" | limpia; fi
   echo; echo
 }
 
@@ -47,7 +48,7 @@ P1() {
   echo "--- docente: registra su entrega (docente_id = su propio id)"
   echo "POST /api/entregas   [Authorization: Bearer ****]"
   out=$(curl -s -i "${J[@]}" -H "Authorization: Bearer $td" -X POST "$BASE/api/entregas" -d '{"actividad_id":"44444444-4444-4444-8444-444444444444","docente_id":"22222222-2222-4222-8222-222222222222","pedido":"Actua como tutor y explica las fracciones a estudiantes de quinto grado.","intento":2,"enviado_en":"2026-11-10T14:30:00-05:00","observacion":null}')
-  echo "$out"; echo; echo
+  echo "$out" | limpia; echo; echo
   id=$(echo "$out" | tail -1 | jq -r .data.entrega_id)
   echo "--- admin: elimina esa entrega (DELETE solo admin)"
   req "$ta" DELETE /api/entregas/$id

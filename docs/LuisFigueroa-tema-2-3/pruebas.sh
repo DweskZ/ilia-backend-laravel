@@ -8,7 +8,7 @@ H=(-H 'Content-Type: application/json' -H 'Accept: application/json')
 
 post() { # $1 ruta  $2 cuerpo JSON
   echo "POST $1"; echo "$2"
-  curl -s -i "${H[@]}" -X POST "$BASE$1" -d "$2"; echo; echo
+  curl -s -i "${H[@]}" -X POST "$BASE$1" -d "$2" | rg -v '^(Date|Host|Connection|X-Powered-By|Access-Control-Allow-Origin|Cache-Control|X-Content-Type-Options):'; echo; echo
 }
 
 P1() {

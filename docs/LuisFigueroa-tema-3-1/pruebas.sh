@@ -81,16 +81,16 @@ P2() { P2a; echo; P2b; }
 
 P3() {
   echo "### P3 — Mensajes inválidos: 422 y no se publica nada en la cola"
-  cola | tail -1
+  cola | rg '^ilia\.revisiones\s'
   echo; echo "--- sin entrega_id"; curl -s -i "${J[@]}" "${A[@]}" -X POST "$BASE/api/revisiones" -d '{}' | rg '^(HTTP|\{)'
   echo; echo "--- entrega_id que no es UUID"; curl -s -i "${J[@]}" "${A[@]}" -X POST "$BASE/api/revisiones" -d '{"entrega_id":"abc"}' | rg '^(HTTP|\{)'
   echo; echo "--- entrega_id inexistente"; curl -s -i "${J[@]}" "${A[@]}" -X POST "$BASE/api/revisiones" -d '{"entrega_id":"99999999-9999-4999-8999-999999999999"}' | rg '^(HTTP|\{)'
-  echo; cola | tail -1
+  echo; cola | rg '^ilia\.revisiones\s'
   echo; echo "--- mensaje malformado puesto directamente en la cola (API de gestión): el consumidor lo rechaza"
   curl -s -u "$RUSER:$RPASS" -H 'content-type: application/json' -X POST "http://127.0.0.1:15672/api/exchanges/%2F/amq.default/publish" \
     -d '{"properties":{"delivery_mode":2},"routing_key":"ilia.revisiones","payload":"{\"foo\":\"no cumple el contrato\"}","payload_encoding":"string"}'; echo
   sleep 2; rg 'malformado' $LOG | tail -1 | perl -pe 's/^\[(\S+ \S+)\] \w+\.(\w+): /$1 $2  /'
-  cola | tail -1
+  cola | rg '^ilia\.revisiones\s'
 }
 
 P4() {

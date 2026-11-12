@@ -120,3 +120,19 @@ Pruebas automatizadas: `tests/Feature/LuisFigueroa/SeguridadEntregasTest.php` (l
 - Sin rotación de tokens ni *refresh tokens*; el token vence a los `LUISFIGUEROA_TOKEN_TTL_MINUTES` y se emite uno nuevo con el login.
 - No hay TLS en local (ver sección e); el cifrado en tránsito es una responsabilidad del despliegue.
 - El listado de entregas devuelve como máximo 100 registros.
+
+## Capturas
+
+Pruebas ejecutadas en la terminal contra `php artisan serve --port=8080` (base SQLite de demostración).
+
+![P1: autenticado y con permiso → 2xx](capturas/P1.png)
+
+![P2: sin autenticación → 401](capturas/P2.png)
+
+![P3: autenticado sin permiso → 403](capturas/P3.png)
+
+![P4: revisión de configuración y secretos](capturas/P4.png)
+
+## Diagrama
+
+![Diagrama del flujo](diagrama.png)

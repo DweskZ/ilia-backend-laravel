@@ -142,3 +142,29 @@ Pruebas automatizadas: `tests/Feature/LuisFigueroa/EnrutamientoEventosTest.php` 
 - El `estado` llega en el evento; no se consulta la entrega en la base de datos (el filtro actúa sobre el mensaje, como pide el patrón).
 - `no_enrutables` no tiene consumidor ni *dead-letter*; crece hasta que alguien la revise.
 - Sin reintentos ni *backoff* ante fallos del consumidor: el mensaje inválido se rechaza y se registra.
+
+## Capturas
+
+Pruebas ejecutadas en la terminal contra `php artisan serve --port=8080` (base SQLite de demostración y RabbitMQ real).
+
+![P1: entrega.recibida → revision](capturas/P1.png)
+
+![P2: entrega.calificada → notificaciones](capturas/P2.png)
+
+![P3: entrega.reintento_solicitado → intentos](capturas/P3.png)
+
+![P4: tipo desconocido → no_enrutables](capturas/P4.png)
+
+![P5: evento filtrado (entrega anulada)](capturas/P5.png)
+
+![P6: evento sin campos obligatorios → 422](capturas/P6.png)
+
+![Registro de enrutamiento (tabla evento_ruta)](capturas/R.png)
+
+![Los tres consumidores confirmando sus mensajes](capturas/consumidores.png)
+
+![Topología real en RabbitMQ: exchange, bindings y colas](capturas/topologia.png)
+
+## Diagrama
+
+![Diagrama del flujo](diagrama.png)

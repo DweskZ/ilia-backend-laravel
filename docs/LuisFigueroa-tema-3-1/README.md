@@ -136,3 +136,29 @@ Una segunda sorpresa: en el log, `consumer: mensaje recibido` aparecía **antes*
 - Una conexión AMQP por publicación (sencillo; en carga alta convendría reutilizarla).
 - Sin *dead-letter exchange* ni reintentos con *backoff*: los errores de procesamiento quedan registrados, no reenviados.
 - El consumidor termina si se pierde la conexión (un supervisor como Supervisor/systemd debe reiniciarlo).
+
+## Capturas
+
+Pruebas ejecutadas en la terminal contra `php artisan serve --port=8080` (base SQLite de demostración y RabbitMQ real).
+
+![P1: 3 mensajes válidos → 202 y el consumidor los procesa](capturas/P1.png)
+
+![Consumidor confirmando (ack) los mensajes](capturas/consumidor-P1.png)
+
+![P2: consumidor detenido → mensaje pendiente en la cola](capturas/P2a.png)
+
+![Consumidor detenido](capturas/consumidor-detenido.png)
+
+![P2: consumidor reanudado → mensaje procesado](capturas/P2b.png)
+
+![Consumidor reanudado](capturas/consumidor-reanudado.png)
+
+![P3: mensajes inválidos → 422; malformado rechazado](capturas/P3.png)
+
+![P4: mismo correlation_id en respuesta, tabla y log](capturas/P4.png)
+
+![T: tiempos síncrono vs asíncrono](capturas/T.png)
+
+## Diagrama
+
+![Diagrama del flujo](diagrama.png)

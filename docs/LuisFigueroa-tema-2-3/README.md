@@ -97,3 +97,19 @@ Pruebas automatizadas: `tests/Unit/LuisFigueroa/NormalizadorEntregasTest.php` (A
 - La precisión de `enviado_en` es de segundos (el contrato 2.2 usa `Y-m-d\TH:i:sP`); los milisegundos de B se descartan de forma documentada, no aleatoria.
 - Los campos desconocidos en el cuerpo se ignoran; solo se leen los campos de la tabla de mapeo.
 - La existencia de `actividad_id` y `docente_id` en la base de datos **no** se valida aquí: eso pertenece al registro (`POST /api/entregas`).
+
+## Capturas
+
+Pruebas ejecutadas en la terminal contra `php artisan serve --port=8080` (base SQLite de demostración).
+
+![P1: Origen A (formulario web) → contrato común (200)](capturas/P1.png)
+
+![P2: Origen B (app móvil) → mismo contrato (200)](capturas/P2.png)
+
+![P3: campo faltante y valores inválidos → 422](capturas/P3.png)
+
+![EQ: el `data` de P1 y P2 es idéntico](capturas/EQ.png)
+
+## Diagrama
+
+![Diagrama del flujo](diagrama.png)
