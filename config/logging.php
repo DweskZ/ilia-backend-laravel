@@ -58,6 +58,14 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        // IS-803 · Luis Figueroa: dedicated file for the review pipeline (producer + consumer).
+        'luisfigueroa_revisiones' => [
+            'driver' => 'single',
+            'path' => env('LUISFIGUEROA_REVISIONES_LOG', storage_path('logs/luisfigueroa-revisiones.log')),
+            'level' => 'debug',
+            'replace_placeholders' => true,
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

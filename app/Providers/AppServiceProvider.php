@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use App\Models\Submission;
 use App\Policies\EntregaPolicy;
+use App\Services\LuisFigueroa\Mensajeria\PublicadorAmqp;
+use App\Services\LuisFigueroa\Mensajeria\PublicadorMensajes;
+use App\Services\LuisFigueroa\RevisorPedidos;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -15,7 +18,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Tema 3.1/3.2: the application talks to the broker only through this port.
+        $this->app->bind(PublicadorMensajes::class, PublicadorAmqp::class);
+
+        $this->app->bind(RevisorPedidos::class, fn () => new RevisorPedidos(config('luisfigueroa.revision.retardo_segundos')));
     }
 
     /**

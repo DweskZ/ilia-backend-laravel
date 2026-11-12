@@ -6,6 +6,7 @@ use App\Http\Controllers\api\EstudianteController;
 use App\Http\Controllers\api\LuisFigueroa\AuthTokenController;
 use App\Http\Controllers\api\LuisFigueroa\EntregaController;
 use App\Http\Controllers\api\LuisFigueroa\IntegracionEntregaController;
+use App\Http\Controllers\api\LuisFigueroa\RevisionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,3 +38,10 @@ Route::post('/auth/token', [AuthTokenController::class, 'store'])->middleware('t
 // IS-803 · Tema 2.3 · Luis Figueroa: traducción de dos orígenes al contrato común
 Route::post('/integracion/entregas/web', [IntegracionEntregaController::class, 'web']);
 Route::post('/integracion/entregas/movil', [IntegracionEntregaController::class, 'movil']);
+
+// IS-803 · Tema 3.1 · Luis Figueroa: revisión automática del pedido (asíncrona con RabbitMQ y su equivalente síncrono)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/revisiones', [RevisionController::class, 'store']);
+    Route::post('/revisiones/sincronas', [RevisionController::class, 'sincrona']);
+    Route::get('/revisiones/{correlation_id}', [RevisionController::class, 'show']);
+});

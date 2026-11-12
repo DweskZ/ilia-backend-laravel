@@ -1,0 +1,344 @@
+{
+  "info": {
+    "name": "IS-803 Tema 3.1 - Luis Figueroa",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8080"
+    },
+    {
+      "key": "demo_password",
+      "value": "(valor de LUISFIGUEROA_DEMO_PASSWORD en .env.example)"
+    },
+    {
+      "key": "token_docente",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "0 - Login docente (guarda token_docente)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('200', () => pm.response.to.have.status(200));",
+              "pm.collectionVariables.set('token_docente', pm.response.json().access_token);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/auth/token",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "token"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"docente.demo@ilia.test\",\n  \"password\": \"{{demo_password}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "P1 - Solicitar revision asincrona (202)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('202', () => pm.response.to.have.status(202));",
+              "pm.test('pendiente', () => pm.expect(pm.response.json().estado).to.eql('pendiente'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Correlation-ID",
+            "value": "postman-p1-0001"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/revisiones",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "revisiones"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"entrega_id\": \"66666666-6666-4666-8666-666666666666\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token_docente}}",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "P1/P4 - Consultar estado por correlation_id (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/revisiones/postman-p1-0001",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "revisiones",
+            "postman-p1-0001"
+          ]
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token_docente}}",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "P3 - Mensaje invalido sin entrega_id (422)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('422', () => pm.response.to.have.status(422));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/revisiones",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "revisiones"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token_docente}}",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "P3 - entrega_id inexistente (422)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('422', () => pm.response.to.have.status(422));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/revisiones",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "revisiones"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"entrega_id\": \"99999999-9999-4999-8999-999999999999\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token_docente}}",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "T - Revision sincrona (200, ~3 s)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/revisiones/sincronas",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "revisiones",
+            "sincronas"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"entrega_id\": \"66666666-6666-4666-8666-666666666666\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token_docente}}",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

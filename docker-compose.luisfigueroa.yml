@@ -1,0 +1,27 @@
+# IS-803 · Temas 3.1 y 3.2 · Luis Figueroa: broker RabbitMQ real para desarrollo local.
+# Uso:  docker compose -f docker-compose.luisfigueroa.yml up -d
+# Las credenciales (ficticias) se leen del .env del proyecto; ver .env.example.
+name: luisfigueroa-rabbit
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: luisfigueroa-rabbitmq
+    hostname: luisfigueroa-rabbit
+    restart: unless-stopped
+    ports:
+      - "5672:5672"     # AMQP
+      - "15672:15672"   # Management UI: http://localhost:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: ${LUISFIGUEROA_RABBITMQ_USER:?defina LUISFIGUEROA_RABBITMQ_USER en .env}
+      RABBITMQ_DEFAULT_PASS: ${LUISFIGUEROA_RABBITMQ_PASSWORD:?defina LUISFIGUEROA_RABBITMQ_PASSWORD en .env}
+    volumes:
+      - luisfigueroa_rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  luisfigueroa_rabbitmq_data:
