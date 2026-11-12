@@ -7,6 +7,7 @@ use App\Models\AppUser;
 use App\Models\Submission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class EntregaContratoTest extends TestCase
@@ -22,6 +23,8 @@ class EntregaContratoTest extends TestCase
         parent::setUp();
         $this->actividad = Activity::factory()->create();
         $this->docente = AppUser::factory()->create();
+        // Tema 2.4: the endpoints now require a bearer token.
+        Sanctum::actingAs($this->docente);
     }
 
     private function payload(array $override = []): array

@@ -28,6 +28,7 @@ Thumbs.db
 
 # Local environment copies and AI tool files stay out of the repository
 .env.*
+!.env.example
 AGENTS.md
 CLAUDE.md
 /.claude

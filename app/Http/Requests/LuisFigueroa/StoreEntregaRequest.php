@@ -10,9 +10,12 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreEntregaRequest extends FormRequest
 {
+    /** 403 (before validation) when a docente tries to submit on behalf of someone else. */
     public function authorize(): bool
     {
-        return true;
+        $docenteId = $this->input('docente_id');
+
+        return $this->user()->can('create', [Submission::class, is_string($docenteId) ? $docenteId : null]);
     }
 
     public function rules(): array

@@ -20,4 +20,9 @@ class AppUserFactory extends Factory
             'is_active' => true,
         ];
     }
+
+    public function admin(): static
+    {
+        return $this->state(['role' => 'instructor']);
+    }
 }
