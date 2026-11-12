@@ -1,0 +1,209 @@
+{
+  "info": {
+    "name": "IS-803 Tema 2.3 - Luis Figueroa",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8080"
+    }
+  ],
+  "item": [
+    {
+      "name": "P1 - Origen A formulario web valido (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('200', () => pm.response.to.have.status(200));",
+              "pm.test('intento entero', () => pm.expect(pm.response.json().data.intento).to.eql(2));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/integracion/entregas/web",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "integracion",
+            "entregas",
+            "web"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idActividad\": \"44444444-4444-4444-8444-444444444444\",\n  \"idDocente\": \"22222222-2222-4222-8222-222222222222\",\n  \"textoPedido\": \"Actua como tutor y explica las fracciones a estudiantes de quinto grado.\",\n  \"numeroIntento\": \"2\",\n  \"fechaEnvio\": \"10/11/2026 14:30\",\n  \"comentario\": \"\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "P2 - Origen B app movil equivalente (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('200', () => pm.response.to.have.status(200));",
+              "pm.test('enviado_en UTC', () => pm.expect(pm.response.json().data.enviado_en).to.eql('2026-11-10T19:30:00+00:00'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/integracion/entregas/movil",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "integracion",
+            "entregas",
+            "movil"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"submission\": {\n    \"activity_uuid\": \"44444444-4444-4444-8444-444444444444\",\n    \"teacher_uuid\": \"22222222-2222-4222-8222-222222222222\",\n    \"prompt_text\": \"Actua como tutor y explica las fracciones a estudiantes de quinto grado.\",\n    \"attempt\": 2,\n    \"sent_at_ms\": 1794339000000\n  },\n  \"note\": null\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "P3 - Campo faltante y valores invalidos (422)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('422', () => pm.response.to.have.status(422));",
+              "pm.test('errores', () => pm.expect(pm.response.json().errores).to.have.property('textoPedido'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/integracion/entregas/web",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "integracion",
+            "entregas",
+            "web"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idActividad\": \"44444444-4444-4444-8444-444444444444\",\n  \"idDocente\": \"22222222-2222-4222-8222-222222222222\",\n  \"numeroIntento\": \"dos\",\n  \"fechaEnvio\": \"31/02/2026 10:00\",\n  \"comentario\": \"\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "P3b - App movil attempt texto y sent_at_ms en segundos (422)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('422', () => pm.response.to.have.status(422));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/integracion/entregas/movil",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "integracion",
+            "entregas",
+            "movil"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"submission\": {\n    \"activity_uuid\": \"44444444-4444-4444-8444-444444444444\",\n    \"teacher_uuid\": \"22222222-2222-4222-8222-222222222222\",\n    \"prompt_text\": \"Actua como tutor y explica las fracciones a estudiantes de quinto grado.\",\n    \"attempt\": \"2\",\n    \"sent_at_ms\": 1794339000\n  },\n  \"note\": null\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
